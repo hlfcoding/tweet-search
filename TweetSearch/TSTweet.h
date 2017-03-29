@@ -11,11 +11,11 @@
 
 @interface TSTweet : NSManagedObject
 
-@property (nonatomic, retain) NSString *text;
-@property (nonatomic, retain) NSString *userScreenName;
-@property (nonatomic, retain) NSURL *profileImageURL;
-@property (nonatomic, retain) NSNumber *tweetID;
-@property (nonatomic, retain) NSDate *createdAt;
+@property (nonatomic) NSString *text;
+@property (nonatomic) NSString *userScreenName;
+@property (nonatomic) NSURL *profileImageURL;
+@property (nonatomic) NSNumber *tweetID;
+@property (nonatomic) NSDate *createdAt;
 
 + (instancetype)insertTweetFromDictionary:(NSDictionary *)dictionary
                         withDateFormatter:(NSDateFormatter *)dateFormatter

@@ -10,8 +10,8 @@
 
 @interface TSAppDelegate ()
 
-@property (strong, nonatomic, readwrite) NSManagedObjectContext *managedObjectContext;
-@property (strong, nonatomic, readwrite) NSDateFormatter *tweetDateFormatter;
+@property (nonatomic, readwrite) NSManagedObjectContext *managedObjectContext;
+@property (nonatomic, readwrite) NSDateFormatter *tweetDateFormatter;
 
 - (void)setupCoreData;
 

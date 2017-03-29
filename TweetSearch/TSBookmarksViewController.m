@@ -22,16 +22,16 @@
 <UISearchBarDelegate, UISearchDisplayDelegate, NSFetchedResultsControllerDelegate>
 
 // Accounts.
-@property (weak, nonatomic) ACAccount *twitterAccount;
-@property (strong, nonatomic) ACAccountStore *accountStore;
+@property (nonatomic, weak) ACAccount *twitterAccount;
+@property (nonatomic) ACAccountStore *accountStore;
 
 // Data.
-@property (strong, nonatomic) NSArray *searchResults;
-@property (strong, nonatomic) NSFetchedResultsController *bookmarks;
+@property (nonatomic) NSArray *searchResults;
+@property (nonatomic) NSFetchedResultsController *bookmarks;
 
 // Misc.
-@property (weak, nonatomic) TSAppDelegate *sharedContext;
-@property (strong, nonatomic) NSIndexPath *currentSearchResultIndexPath;
+@property (nonatomic, weak) TSAppDelegate *sharedContext;
+@property (nonatomic) NSIndexPath *currentSearchResultIndexPath;
 
 - (void)checkTwitterAccountAccess;
 - (void)performTwitterSearchForQuery:(NSString *)query

@@ -10,9 +10,9 @@
 
 @interface TSAppDelegate : UIResponder <UIApplicationDelegate>
 
-@property (strong, nonatomic) UIWindow *window;
+@property (nonatomic) UIWindow *window;
 
-@property (strong, nonatomic, readonly) NSManagedObjectContext *managedObjectContext; // We only need one context.
-@property (strong, nonatomic, readonly) NSDateFormatter *tweetDateFormatter; // This is expensive, so share it.
+@property (nonatomic, readonly) NSManagedObjectContext *managedObjectContext; // We only need one context.
+@property (nonatomic, readonly) NSDateFormatter *tweetDateFormatter; // This is expensive, so share it.
 
 @end
