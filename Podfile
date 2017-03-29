@@ -1,3 +1,7 @@
+source 'https://github.com/CocoaPods/Specs.git'
+
 platform :ios, '7.1'
 
-pod 'SDWebImage', '~> 3.6.0'
+target 'TweetSearch' do
+  pod 'SDWebImage', '~> 3.8'
+end
