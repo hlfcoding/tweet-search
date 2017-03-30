@@ -45,7 +45,7 @@
 {
   [super viewDidLoad];
 
-  self.sharedContext = [UIApplication sharedApplication].delegate;
+  self.sharedContext = (TSAppDelegate *)[UIApplication sharedApplication].delegate;
 
   self.navigationItem.rightBarButtonItem = self.editButtonItem;
 
@@ -114,7 +114,7 @@
     NSDictionary *tweet = self.searchResults[indexPath.row];
     cell.tweetTextLabel.text = tweet[@"text"];
     cell.screenNameLabel.text = tweet[@"user"][@"screen_name"];
-    [cell.profileImageView setImageWithURL:[NSURL URLWithString:tweet[@"user"][@"profile_image_url"]]];
+    [cell.profileImageView sd_setImageWithURL:[NSURL URLWithString:tweet[@"user"][@"profile_image_url"]]];
     return cell;
   }
   // Set up bookmark cell.
@@ -122,7 +122,7 @@
   TSTweet *tweet = [self.bookmarks objectAtIndexPath:indexPath];
   cell.tweetTextLabel.text = tweet.text;
   cell.screenNameLabel.text = [NSString stringWithFormat:@"@%@", tweet.userScreenName];
-  [cell.profileImageView setImageWithURL:tweet.profileImageURL];
+  [cell.profileImageView sd_setImageWithURL:tweet.profileImageURL];
   return cell;
 }
 
