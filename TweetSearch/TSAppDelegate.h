@@ -11,5 +11,6 @@
 
 @property (nonatomic, readonly) NSManagedObjectContext *managedObjectContext; // We only need one context.
 @property (nonatomic, readonly) NSDateFormatter *tweetDateFormatter; // This is expensive, so share it.
+@property (nonatomic, readonly) UIColor *primaryColor;
 
 @end

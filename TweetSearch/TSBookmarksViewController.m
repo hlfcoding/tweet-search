@@ -47,6 +47,7 @@
   self.sharedContext = (TSAppDelegate *)[UIApplication sharedApplication].delegate;
 
   self.navigationItem.rightBarButtonItem = self.editButtonItem;
+  self.title = NSLocalizedString(@"TweetSearch", nil);
 
   // Only option I found that works with IB.
   [self.searchDisplayController.searchResultsTableView registerClass:[TSTweetCell class] forCellReuseIdentifier:TSTweetCellReuseIdentifier];
@@ -86,14 +87,6 @@
 }
 
 #pragma mark - UITableViewDataSource
-
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
-{
-  if (tableView == self.searchDisplayController.searchResultsTableView) {
-    return nil;
-  }
-  return NSLocalizedString(@"Saved Tweets", nil);
-}
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
