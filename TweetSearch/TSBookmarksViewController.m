@@ -114,7 +114,7 @@
     NSDictionary *tweet = self.searchResults[indexPath.row];
     cell.tweetTextLabel.text = tweet[@"text"];
     cell.screenNameLabel.text = tweet[@"user"][@"screen_name"];
-    [cell.profileImageView sd_setImageWithURL:[NSURL URLWithString:tweet[@"user"][@"profile_image_url"]]];
+    [cell.profileImageView sd_setImageWithURL:[NSURL URLWithString:tweet[@"user"][@"profile_image_url_https"]]];
     return cell;
   }
   // Set up bookmark cell.

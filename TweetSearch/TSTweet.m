@@ -21,7 +21,7 @@
   TSTweet *tweet = [NSEntityDescription insertNewObjectForEntityForName:TSTweetEntityName inManagedObjectContext:managedObjectContext];
   tweet.text = dictionary[@"text"];
   tweet.userScreenName = dictionary[@"user"][@"screen_name"];
-  tweet.profileImageURL = [NSURL URLWithString:dictionary[@"user"][@"profile_image_url"]];
+  tweet.profileImageURL = [NSURL URLWithString:dictionary[@"user"][@"profile_image_url_https"]];
   tweet.tweetID = dictionary[@"id"];
   tweet.createdAt = [dateFormatter dateFromString:dictionary[@"created_at"]];
   return tweet;
