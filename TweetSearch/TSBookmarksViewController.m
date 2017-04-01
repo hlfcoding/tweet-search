@@ -176,7 +176,7 @@
 - (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar
 {
   [self performTwitterSearchForQuery:searchBar.text withCompletion:^(NSDictionary *tweetsData) {
-    self.searchResults = tweetsData[@"statuses"];
+    self.searchResults = [TSTweet parseTweets:tweetsData[@"statuses"]];
     [self.searchDisplayController.searchResultsTableView reloadData];
   }];
 }

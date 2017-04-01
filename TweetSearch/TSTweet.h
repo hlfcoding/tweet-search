@@ -17,4 +17,7 @@
                         withDateFormatter:(NSDateFormatter *)dateFormatter
                    inManagedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
++ (NSDictionary *)parseTweet:(NSDictionary *)tweet;
++ (NSMutableArray<NSDictionary *> *)parseTweets:(NSMutableArray<NSDictionary *> *)tweets;
+
 @end
