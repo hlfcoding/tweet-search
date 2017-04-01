@@ -65,8 +65,7 @@
                                                          sectionNameKeyPath:nil cacheName:nil];
   self.bookmarks.delegate = self;
   NSError *error;
-  BOOL didFetch = [self.bookmarks performFetch:&error];
-  if (!didFetch) {
+  if (![self.bookmarks performFetch:&error]) {
     UIAlertView *alertView =
     [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", nil)
                                message:NSLocalizedString(@"Error fetching saved tweets", nil)
@@ -196,8 +195,7 @@
   self.searchResults = nil;
   [self.tableView reloadData];
   NSError *error;
-  BOOL didSave = [self.sharedContext.managedObjectContext save:&error];
-  if (!didSave) {
+  if (![self.sharedContext.managedObjectContext save:&error]) {
     NSLog(@"Error when persisting saved tweets: %@", error.localizedDescription);
   }
 }

@@ -21,16 +21,13 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   [self setupCoreData];
-  self.tweetDateFormatter = [[NSDateFormatter alloc] init];
-  self.tweetDateFormatter.dateFormat = @"EEE MMM d HH:mm:ss Z y";
   return YES;
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
   NSError *error;
-  BOOL didSave = [self.managedObjectContext save:&error];
-  if (!didSave) {
+  if (![self.managedObjectContext save:&error]) {
     NSLog(@"Error when persisting saved tweets: %@", error.localizedDescription);
   }
 }
@@ -55,6 +52,15 @@
     NSLog(@"Error adding store: %@", error.localizedDescription);
   }
   self.managedObjectContext = context;
+}
+
+- (NSDateFormatter *)tweetDateFormatter
+{
+  if (!_tweetDateFormatter) {
+    _tweetDateFormatter = [[NSDateFormatter alloc] init];
+    _tweetDateFormatter.dateFormat = @"EEE MMM d HH:mm:ss Z y";
+  }
+  return _tweetDateFormatter;
 }
 
 @end
