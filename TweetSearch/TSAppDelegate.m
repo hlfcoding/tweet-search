@@ -4,7 +4,6 @@
 //
 //  Created by Peng Wang on 5/14/14.
 //
-//
 
 #import "TSAppDelegate.h"
 
@@ -41,7 +40,7 @@
   [self.managedObjectContext save:NULL];
 }
 
-#pragma mark - Own methods
+#pragma mark - Private
 
 - (void)setupCoreData
 {

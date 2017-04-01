@@ -4,7 +4,6 @@
 //
 //  Created by Peng Wang on 5/14/14.
 //
-//
 
 #import "TSBookmarksViewController.h"
 
@@ -87,7 +86,7 @@
   self.searchResults = nil;
 }
 
-#pragma mark - Table view data source
+#pragma mark - UITableViewDataSource
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
@@ -153,7 +152,7 @@
   }
 }
 
-#pragma mark - Table view delegate
+#pragma mark - UITableViewDelegate
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -174,7 +173,7 @@
   return NO;
 }
 
-#pragma mark - Search bar delegate
+#pragma mark - UISearchBarDelegate
 
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar
 {
@@ -190,7 +189,7 @@
   }];
 }
 
-#pragma mark - Search display controller delegate
+#pragma mark - UISearchDisplayDelegate
 
 - (void)searchDisplayControllerDidEndSearch:(UISearchDisplayController *)controller
 {
@@ -203,7 +202,7 @@
   }
 }
 
-#pragma mark - Fetched results controller delegate
+#pragma mark - NSFetchedResultsControllerDelegate
 
 - (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath
 {
@@ -216,7 +215,7 @@
   }
 }
 
-#pragma mark - Own methods
+#pragma mark - Private
 
 - (void)checkTwitterAccountAccess
 {

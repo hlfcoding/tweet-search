@@ -4,7 +4,6 @@
 //
 //  Created by Peng Wang on 5/14/14.
 //
-//
 
 #import <XCTest/XCTest.h>
 

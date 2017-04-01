@@ -4,9 +4,6 @@
 //
 //  Created by Peng Wang on 5/15/14.
 //
-//
-
-#import <UIKit/UIKit.h>
 
 @interface TSTweetCell : UITableViewCell
 

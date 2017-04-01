@@ -4,7 +4,6 @@
 //
 //  Created by Peng Wang on 5/15/14.
 //
-//
 
 #import "TSTweet.h"
 
