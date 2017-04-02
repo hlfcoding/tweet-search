@@ -67,11 +67,14 @@
   self.bookmarks.delegate = self;
   NSError *error;
   if (![self.bookmarks performFetch:&error]) {
-    UIAlertView *alertView =
-    [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", nil)
-                               message:NSLocalizedString(@"Error fetching saved tweets", nil)
-                              delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-    [alertView show];
+    UIAlertController *alert = [UIAlertController
+                                alertControllerWithTitle:NSLocalizedString(@"Error", nil)
+                                message:NSLocalizedString(@"Error fetching saved tweets", nil)
+                                preferredStyle:UIAlertControllerStyleAlert];
+    [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+      [alert dismissViewControllerAnimated:YES completion:nil];
+    }]];
+    [self presentViewController:alert animated:YES completion:nil];
     NSLog(@"Error when fetching persisted Tweets: %@", error.localizedDescription);
   }
 
