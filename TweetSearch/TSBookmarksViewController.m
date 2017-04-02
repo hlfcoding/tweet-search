@@ -33,8 +33,10 @@
 @property (nonatomic) NSIndexPath *currentSearchResultIndexPath;
 
 - (void)checkTwitterAccountAccess;
+- (void)loadBookmarks;
 - (void)performTwitterSearchForQuery:(NSString *)query
                       withCompletion:(void (^)(NSDictionary *tweetsData))completion;
+- (void)setUpSearch;
 
 @end
 
@@ -49,34 +51,12 @@
   self.navigationItem.rightBarButtonItem = self.editButtonItem;
   self.title = NSLocalizedString(@"TweetSearch", nil);
 
-  // Only option I found that works with IB.
-  [self.searchDisplayController.searchResultsTableView registerClass:[TSTweetCell class] forCellReuseIdentifier:TSTweetCellReuseIdentifier];
-  // We're making use of UITableViewCellEditingStyleInsert.
-  [self.searchDisplayController.searchResultsTableView setEditing:YES animated:NO];
-
   self.accountStore = [[ACAccountStore alloc] init];
   [self checkTwitterAccountAccess];
 
-  self.searchResults = @[];
+  [self setUpSearch];
 
-  NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:TSTweetEntityName];
-  request.sortDescriptors = @[];
-  self.bookmarks = [[NSFetchedResultsController alloc] initWithFetchRequest:request
-                                                       managedObjectContext:self.sharedContext.managedObjectContext
-                                                         sectionNameKeyPath:nil cacheName:nil];
-  self.bookmarks.delegate = self;
-  NSError *error;
-  if (![self.bookmarks performFetch:&error]) {
-    UIAlertController *alert = [UIAlertController
-                                alertControllerWithTitle:NSLocalizedString(@"Error", nil)
-                                message:NSLocalizedString(@"Error fetching saved tweets", nil)
-                                preferredStyle:UIAlertControllerStyleAlert];
-    [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-      [alert dismissViewControllerAnimated:YES completion:nil];
-    }]];
-    [self presentViewController:alert animated:YES completion:nil];
-    NSLog(@"Error when fetching persisted Tweets: %@", error.localizedDescription);
-  }
+  [self loadBookmarks];
 
   id cancelButtonAppearance = [UIBarButtonItem appearanceWhenContainedIn:[UISearchBar class], nil];
   [cancelButtonAppearance setTitle:@"Done"];
@@ -250,6 +230,28 @@
   }
 }
 
+- (void)loadBookmarks
+{
+  NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:TSTweetEntityName];
+  request.sortDescriptors = @[];
+  self.bookmarks = [[NSFetchedResultsController alloc] initWithFetchRequest:request
+                                                       managedObjectContext:self.sharedContext.managedObjectContext
+                                                         sectionNameKeyPath:nil cacheName:nil];
+  self.bookmarks.delegate = self;
+  NSError *error;
+  if (![self.bookmarks performFetch:&error]) {
+    UIAlertController *alert = [UIAlertController
+                                alertControllerWithTitle:NSLocalizedString(@"Error", nil)
+                                message:NSLocalizedString(@"Error fetching saved tweets", nil)
+                                preferredStyle:UIAlertControllerStyleAlert];
+    [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+      [alert dismissViewControllerAnimated:YES completion:nil];
+    }]];
+    [self presentViewController:alert animated:YES completion:nil];
+    NSLog(@"Error when fetching persisted Tweets: %@", error.localizedDescription);
+  }
+}
+
 - (void)performTwitterSearchForQuery:(NSString *)query withCompletion:(void (^)(NSDictionary *tweetsData))completion
 {
   ACAccountStore *accountStore = self.accountStore;
@@ -283,6 +285,16 @@
       }];
     }
   }];
+}
+
+- (void)setUpSearch
+{
+  // Only option I found that works with IB.
+  [self.searchDisplayController.searchResultsTableView registerClass:[TSTweetCell class] forCellReuseIdentifier:TSTweetCellReuseIdentifier];
+  // We're making use of UITableViewCellEditingStyleInsert.
+  [self.searchDisplayController.searchResultsTableView setEditing:YES animated:NO];
+
+  self.searchResults = @[];
 }
 
 @end
