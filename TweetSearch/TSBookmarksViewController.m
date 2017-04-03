@@ -272,33 +272,35 @@
   ACAccountStore *accountStore = self.accountStore;
   ACAccountType *accountType = [accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
   [accountStore requestAccessToAccountsWithType:accountType options:nil completion:^(BOOL granted, NSError *error) {
-    if (granted) {
-      // Perform search.
-      NSURL *url = [NSURL URLWithString:@"https://api.twitter.com/1.1/search/tweets.json"];
-      NSDictionary *params = @{ @"q": [query stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]] };
-      SLRequest *request = [SLRequest requestForServiceType:SLServiceTypeTwitter requestMethod:SLRequestMethodGET URL:url parameters:params];
-      request.account = [accountStore accountsWithAccountType:accountType].firstObject;
-      [request performRequestWithHandler:^(NSData *responseData, NSHTTPURLResponse *urlResponse, NSError *error) {
-        if (responseData) {
-          if (urlResponse.statusCode >= 200 && urlResponse.statusCode < 300) {
-            NSError *jsonError;
-            NSDictionary *tweetsData = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingAllowFragments error:&jsonError];
-            if (tweetsData) {
-              NSLog(@"Tweets: %@", tweetsData);
-              if (completion) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                  completion(tweetsData);
-                });
-              }
-            } else {
-              NSLog(@"Error when serializing from JSON: %@", jsonError.localizedDescription);
-            }
-          } else {
-            NSLog(@"Request not considered successful, status code: %d, description: %@", urlResponse.statusCode, urlResponse.debugDescription);
-          }
-        }
-      }];
+    if (error) {
+      NSLog(@"Access error: %@", error.localizedDescription);
+      return;
+    } else if (!granted) {
+      return;
     }
+    // Perform search.
+    NSURL *url = [NSURL URLWithString:@"https://api.twitter.com/1.1/search/tweets.json"];
+    NSDictionary *params = @{ @"q": [query stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]] };
+    SLRequest *request = [SLRequest requestForServiceType:SLServiceTypeTwitter requestMethod:SLRequestMethodGET URL:url parameters:params];
+    request.account = [accountStore accountsWithAccountType:accountType].firstObject;
+    [request performRequestWithHandler:^(NSData *responseData, NSHTTPURLResponse *urlResponse, NSError *error) {
+      if (responseData && urlResponse.statusCode >= 200 && urlResponse.statusCode < 300) {
+        NSError *jsonError;
+        NSDictionary *tweetsData = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingAllowFragments error:&jsonError];
+        if (tweetsData) {
+          NSLog(@"Tweets: %@", tweetsData);
+          if (completion) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+              completion(tweetsData);
+            });
+          }
+        } else {
+          NSLog(@"Error when serializing from JSON: %@", jsonError.localizedDescription);
+        }
+      } else {
+        NSLog(@"Request not considered successful, status code: %d, description: %@", urlResponse.statusCode, urlResponse.debugDescription);
+      }
+    }];
   }];
 }
 
