@@ -36,6 +36,7 @@
 - (void)loadBookmarks;
 - (void)performTwitterSearchForQuery:(NSString *)query
                       withCompletion:(void (^)(NSDictionary *tweetsData))completion;
+- (void)presentErrorAlertWithMessage:(NSString *)message;
 - (void)setUpSearch;
 
 @end
@@ -209,11 +210,7 @@
       } else {
         // Disable UI and show an alert if we don't.
         searchBar.userInteractionEnabled = NO;
-        UIAlertView *alertView =
-        [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", nil)
-                                   message:NSLocalizedString(@"No permission to access any Twitter accounts.", nil)
-                                  delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
-        [alertView show];
+        [self presentErrorAlertWithMessage:@"No permission to access any Twitter accounts"];
       }
       if (error) {
         NSLog(@"Error when requesting access: %@", error.localizedDescription);
@@ -222,11 +219,7 @@
   } else {
     // Disable UI and show an alert if there aren't any.
     searchBar.userInteractionEnabled = NO;
-    UIAlertView *alertView =
-    [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", nil)
-                               message:NSLocalizedString(@"Could not find any Twitter accounts.", nil)
-                              delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
-    [alertView show];
+    [self presentErrorAlertWithMessage:@"Could not find any Twitter accounts"];
   }
 }
 
@@ -240,14 +233,7 @@
   self.bookmarks.delegate = self;
   NSError *error;
   if (![self.bookmarks performFetch:&error]) {
-    UIAlertController *alert = [UIAlertController
-                                alertControllerWithTitle:NSLocalizedString(@"Error", nil)
-                                message:NSLocalizedString(@"Error fetching saved tweets", nil)
-                                preferredStyle:UIAlertControllerStyleAlert];
-    [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-      [alert dismissViewControllerAnimated:YES completion:nil];
-    }]];
-    [self presentViewController:alert animated:YES completion:nil];
+    [self presentErrorAlertWithMessage:@"Error fetching saved tweets"];
     NSLog(@"Error when fetching persisted Tweets: %@", error.localizedDescription);
   }
 }
@@ -285,6 +271,18 @@
       }];
     }
   }];
+}
+
+- (void)presentErrorAlertWithMessage:(NSString *)message
+{
+  UIAlertController *alert = [UIAlertController
+                              alertControllerWithTitle:NSLocalizedString(@"Error", nil)
+                              message:NSLocalizedString(message, nil)
+                              preferredStyle:UIAlertControllerStyleAlert];
+  [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+    [alert dismissViewControllerAnimated:YES completion:nil];
+  }]];
+  [self presentViewController:alert animated:YES completion:nil];
 }
 
 - (void)setUpSearch
