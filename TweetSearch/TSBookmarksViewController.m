@@ -224,22 +224,22 @@
 
 - (void)checkTwitterAccountAccess
 {
-  ACAccountStore *accountStore = self.accountStore;
-  ACAccountType *accountType = [accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
   if ([SLComposeViewController isAvailableForServiceType:SLServiceTypeTwitter]) {
+    __weak typeof(self) weakSelf = self;
     // Check access if there are accounts.
-    [accountStore requestAccessToAccountsWithType:accountType options:nil completion:^(BOOL granted, NSError *error) {
+    ACAccountType *accountType = [self.accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
+    [self.accountStore requestAccessToAccountsWithType:accountType options:nil completion:^(BOOL granted, NSError *error) {
       if (granted) {
         // Save account if we get access.
-        NSArray *accounts = [accountStore accountsWithAccountType:accountType];
+        NSArray *accounts = [weakSelf.accountStore accountsWithAccountType:accountType];
         if (accounts.count) {
-          self.searchBar.userInteractionEnabled = YES;
-          NSLog(@"Got access for Twitter account: %@", self.twitterAccount);
+          weakSelf.searchBar.userInteractionEnabled = YES;
+          NSLog(@"Got access for Twitter account: %@", weakSelf.twitterAccount);
         }
       } else {
         // Disable UI and show an alert if we don't.
-        self.searchBar.userInteractionEnabled = NO;
-        [self presentErrorAlertWithMessage:@"No permission to access any Twitter accounts"];
+        weakSelf.searchBar.userInteractionEnabled = NO;
+        [weakSelf presentErrorAlertWithMessage:@"No permission to access any Twitter accounts"];
       }
       if (error) {
         NSLog(@"Error when requesting access: %@", error.localizedDescription);
@@ -269,9 +269,9 @@
 
 - (void)performTwitterSearchForQuery:(NSString *)query withCompletion:(void (^)(NSDictionary *tweetsData))completion
 {
-  ACAccountStore *accountStore = self.accountStore;
-  ACAccountType *accountType = [accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
-  [accountStore requestAccessToAccountsWithType:accountType options:nil completion:^(BOOL granted, NSError *error) {
+  __weak typeof(self) weakSelf = self;
+  ACAccountType *accountType = [self.accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
+  [self.accountStore requestAccessToAccountsWithType:accountType options:nil completion:^(BOOL granted, NSError *error) {
     if (error) {
       NSLog(@"Access error: %@", error.localizedDescription);
       return;
@@ -282,11 +282,11 @@
     NSURL *url = [NSURL URLWithString:@"https://api.twitter.com/1.1/search/tweets.json"];
     NSDictionary *params = @{ @"q": [query stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]] };
     SLRequest *request = [SLRequest requestForServiceType:SLServiceTypeTwitter requestMethod:SLRequestMethodGET URL:url parameters:params];
-    request.account = [accountStore accountsWithAccountType:accountType].firstObject;
+    request.account = [weakSelf.accountStore accountsWithAccountType:accountType].firstObject;
     [request performRequestWithHandler:^(NSData *responseData, NSHTTPURLResponse *urlResponse, NSError *error) {
       dispatch_block_t presentErrorAlert = ^{
         dispatch_async(dispatch_get_main_queue(), ^{
-          [self presentErrorAlertWithMessage:@"Error fetching tweets"];
+          [weakSelf presentErrorAlertWithMessage:@"Error fetching tweets"];
         });
       };
       if (error) {
