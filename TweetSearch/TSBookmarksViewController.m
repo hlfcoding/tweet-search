@@ -246,7 +246,7 @@
     if (granted) {
       // Perform search.
       NSURL *url = [NSURL URLWithString:@"https://api.twitter.com/1.1/search/tweets.json"];
-      NSDictionary *params = @{ @"q": [query stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding] };
+      NSDictionary *params = @{ @"q": [query stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]] };
       SLRequest *request = [SLRequest requestForServiceType:SLServiceTypeTwitter requestMethod:SLRequestMethodGET URL:url parameters:params];
       request.account = [accountStore accountsWithAccountType:accountType].firstObject;
       [request performRequestWithHandler:^(NSData *responseData, NSHTTPURLResponse *urlResponse, NSError *error) {
