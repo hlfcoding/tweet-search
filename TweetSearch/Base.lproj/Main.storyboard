@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES" initialViewController="ZME-Cj-4GQ">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES" initialViewController="ZME-Cj-4GQ">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -84,19 +84,10 @@
                     </tableView>
                     <navigationItem key="navigationItem" id="aFJ-DK-EWu"/>
                     <connections>
-                        <outlet property="searchDisplayController" destination="uku-iE-YxS" id="Blb-Z9-9u0"/>
+                        <outlet property="searchBar" destination="Wqq-eo-0Fq" id="SV5-N1-BJz"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Gt8-qW-CAB" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <searchDisplayController searchResultsTitle="Tweets" id="uku-iE-YxS">
-                    <connections>
-                        <outlet property="delegate" destination="0Bh-yp-mum" id="iDV-fa-Ecf"/>
-                        <outlet property="searchBar" destination="Wqq-eo-0Fq" id="IbC-19-1Sn"/>
-                        <outlet property="searchContentsController" destination="0Bh-yp-mum" id="PoV-dA-0v0"/>
-                        <outlet property="searchResultsDataSource" destination="0Bh-yp-mum" id="3D5-CS-a40"/>
-                        <outlet property="searchResultsDelegate" destination="0Bh-yp-mum" id="lLv-E6-AzD"/>
-                    </connections>
-                </searchDisplayController>
             </objects>
             <point key="canvasLocation" x="521" y="-57"/>
         </scene>
