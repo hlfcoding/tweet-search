@@ -284,6 +284,16 @@
     SLRequest *request = [SLRequest requestForServiceType:SLServiceTypeTwitter requestMethod:SLRequestMethodGET URL:url parameters:params];
     request.account = [accountStore accountsWithAccountType:accountType].firstObject;
     [request performRequestWithHandler:^(NSData *responseData, NSHTTPURLResponse *urlResponse, NSError *error) {
+      dispatch_block_t presentErrorAlert = ^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+          [self presentErrorAlertWithMessage:@"Error fetching tweets"];
+        });
+      };
+      if (error) {
+        presentErrorAlert();
+        NSLog(@"Request error: %@", error.localizedDescription);
+        return;
+      }
       if (responseData && urlResponse.statusCode >= 200 && urlResponse.statusCode < 300) {
         NSError *jsonError;
         NSDictionary *tweetsData = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingAllowFragments error:&jsonError];
@@ -298,6 +308,7 @@
           NSLog(@"Error when serializing from JSON: %@", jsonError.localizedDescription);
         }
       } else {
+        presentErrorAlert();
         NSLog(@"Request not considered successful, status code: %d, description: %@", urlResponse.statusCode, urlResponse.debugDescription);
       }
     }];
