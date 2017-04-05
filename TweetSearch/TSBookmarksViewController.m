@@ -224,21 +224,23 @@
     // Check access if there are accounts.
     ACAccountType *accountType = [self.accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
     [self.accountStore requestAccessToAccountsWithType:accountType options:nil completion:^(BOOL granted, NSError *error) {
-      if (granted) {
-        // Save account if we get access.
-        NSArray *accounts = [weakSelf.accountStore accountsWithAccountType:accountType];
-        if (accounts.count) {
-          weakSelf.searchBar.userInteractionEnabled = YES;
-          NSLog(@"Got access for Twitter account: %@", weakSelf.twitterAccount);
+      dispatch_async(dispatch_get_main_queue(), ^{
+        if (granted) {
+          // Save account if we get access.
+          NSArray *accounts = [weakSelf.accountStore accountsWithAccountType:accountType];
+          if (accounts.count) {
+            weakSelf.searchBar.userInteractionEnabled = YES;
+            NSLog(@"Got access for Twitter account: %@", weakSelf.twitterAccount);
+          }
+        } else {
+          // Disable UI and show an alert if we don't.
+          weakSelf.searchBar.userInteractionEnabled = NO;
+          [weakSelf presentErrorAlertWithMessage:@"Error fetching tweets"];
         }
-      } else {
-        // Disable UI and show an alert if we don't.
-        weakSelf.searchBar.userInteractionEnabled = NO;
-        [weakSelf presentErrorAlertWithMessage:@"No permission to access any Twitter accounts"];
-      }
-      if (error) {
-        NSLog(@"Error when requesting access: %@", error.localizedDescription);
-      }
+        if (error) {
+          NSLog(@"Error when requesting access: %@", error.localizedDescription);
+        }
+      });
     }];
   } else {
     // Disable UI and show an alert if there aren't any.
@@ -316,7 +318,7 @@
                               alertControllerWithTitle:NSLocalizedString(@"Error", nil)
                               message:NSLocalizedString(message, nil)
                               preferredStyle:UIAlertControllerStyleAlert];
-  [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+  [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
     [alert dismissViewControllerAnimated:YES completion:nil];
   }]];
   [self presentViewController:alert animated:YES completion:nil];
