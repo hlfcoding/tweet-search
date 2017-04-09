@@ -36,7 +36,7 @@
 @property (nonatomic) BOOL didJustClearSearch;
 @property (nonatomic) IBOutlet UISearchBar *searchBar;
 
-- (void)checkTwitterAccountAccess;
+- (void)accessTwitterAccount;
 - (void)loadBookmarks;
 - (void)performTwitterSearchForQuery:(NSString *)query
                       withCompletion:(void (^)(NSDictionary *tweetsData))completion;
@@ -58,9 +58,7 @@
   id cancelButtonAppearance = [UIBarButtonItem appearanceWhenContainedInInstancesOfClasses:@[[UISearchBar class]]];
   [cancelButtonAppearance setTitle:NSLocalizedString(@"Done", nil)];
 
-  self.accountStore = [[ACAccountStore alloc] init];
-  [self checkTwitterAccountAccess];
-
+  [self accessTwitterAccount];
   [self resetSearch];
 
   [self loadBookmarks];
@@ -217,9 +215,10 @@
   }
 }
 
-- (void)checkTwitterAccountAccess
+- (void)accessTwitterAccount
 {
   if ([SLComposeViewController isAvailableForServiceType:SLServiceTypeTwitter]) {
+    self.accountStore = [[ACAccountStore alloc] init];
     self.searchBar.userInteractionEnabled = NO;
     __weak typeof(self) weakSelf = self;
     // Check access if there are accounts.
