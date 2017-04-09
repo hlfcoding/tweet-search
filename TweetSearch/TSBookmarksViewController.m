@@ -220,6 +220,7 @@
 - (void)checkTwitterAccountAccess
 {
   if ([SLComposeViewController isAvailableForServiceType:SLServiceTypeTwitter]) {
+    self.searchBar.userInteractionEnabled = NO;
     __weak typeof(self) weakSelf = self;
     // Check access if there are accounts.
     ACAccountType *accountType = [self.accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
@@ -268,47 +269,39 @@
 {
   __weak typeof(self) weakSelf = self;
   ACAccountType *accountType = [self.accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
-  [self.accountStore requestAccessToAccountsWithType:accountType options:nil completion:^(BOOL granted, NSError *error) {
+  // Perform search.
+  NSURL *url = [NSURL URLWithString:@"https://api.twitter.com/1.1/search/tweets.json"];
+  NSDictionary *params = @{ @"q": [query stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]] };
+  SLRequest *request = [SLRequest requestForServiceType:SLServiceTypeTwitter requestMethod:SLRequestMethodGET URL:url parameters:params];
+  request.account = [weakSelf.accountStore accountsWithAccountType:accountType].firstObject;
+  [request performRequestWithHandler:^(NSData *responseData, NSHTTPURLResponse *urlResponse, NSError *error) {
+    dispatch_block_t presentErrorAlert = ^{
+      dispatch_async(dispatch_get_main_queue(), ^{
+        [weakSelf presentErrorAlertWithMessage:@"Error fetching tweets"];
+      });
+    };
     if (error) {
-      NSLog(@"Access error: %@", error.localizedDescription);
-      return;
-    } else if (!granted) {
+      presentErrorAlert();
+      NSLog(@"Request error: %@", error.localizedDescription);
       return;
     }
-    // Perform search.
-    NSURL *url = [NSURL URLWithString:@"https://api.twitter.com/1.1/search/tweets.json"];
-    NSDictionary *params = @{ @"q": [query stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]] };
-    SLRequest *request = [SLRequest requestForServiceType:SLServiceTypeTwitter requestMethod:SLRequestMethodGET URL:url parameters:params];
-    request.account = [weakSelf.accountStore accountsWithAccountType:accountType].firstObject;
-    [request performRequestWithHandler:^(NSData *responseData, NSHTTPURLResponse *urlResponse, NSError *error) {
-      dispatch_block_t presentErrorAlert = ^{
-        dispatch_async(dispatch_get_main_queue(), ^{
-          [weakSelf presentErrorAlertWithMessage:@"Error fetching tweets"];
-        });
-      };
-      if (error) {
-        presentErrorAlert();
-        NSLog(@"Request error: %@", error.localizedDescription);
-        return;
-      }
-      if (responseData && urlResponse.statusCode >= 200 && urlResponse.statusCode < 300) {
-        NSError *jsonError;
-        NSDictionary *tweetsData = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingAllowFragments error:&jsonError];
-        if (tweetsData) {
-          NSLog(@"Tweets: %@", tweetsData);
-          if (completion) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-              completion(tweetsData);
-            });
-          }
-        } else {
-          NSLog(@"Error when serializing from JSON: %@", jsonError.localizedDescription);
+    if (responseData && urlResponse.statusCode >= 200 && urlResponse.statusCode < 300) {
+      NSError *jsonError;
+      NSDictionary *tweetsData = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingAllowFragments error:&jsonError];
+      if (tweetsData) {
+        NSLog(@"Tweets: %@", tweetsData);
+        if (completion) {
+          dispatch_async(dispatch_get_main_queue(), ^{
+            completion(tweetsData);
+          });
         }
       } else {
-        presentErrorAlert();
-        NSLog(@"Request not considered successful, status code: %d, description: %@", urlResponse.statusCode, urlResponse.debugDescription);
+        NSLog(@"Error when serializing from JSON: %@", jsonError.localizedDescription);
       }
-    }];
+    } else {
+      presentErrorAlert();
+      NSLog(@"Request not considered successful, status code: %d, description: %@", urlResponse.statusCode, urlResponse.debugDescription);
+    }
   }];
 }
 
