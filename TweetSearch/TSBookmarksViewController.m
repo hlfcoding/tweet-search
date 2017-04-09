@@ -35,6 +35,7 @@
 @property (nonatomic, getter=isSearching) BOOL searching;
 @property (nonatomic) BOOL didJustClearSearch;
 @property (nonatomic) IBOutlet UISearchBar *searchBar;
+@property (nonatomic) IBOutlet UIBarButtonItem *searchDoneButtonItem;
 
 - (void)accessTwitterAccount;
 - (void)loadBookmarks;
@@ -55,8 +56,6 @@
 
   self.navigationItem.rightBarButtonItem = self.editButtonItem;
   self.title = NSLocalizedString(@"TweetSearch", nil);
-  id cancelButtonAppearance = [UIBarButtonItem appearanceWhenContainedInInstancesOfClasses:@[[UISearchBar class]]];
-  [cancelButtonAppearance setTitle:NSLocalizedString(@"Done", nil)];
 
   [self accessTwitterAccount];
   [self resetSearch];
@@ -69,6 +68,12 @@
   [super didReceiveMemoryWarning];
   // Clear out some temporary data.
   [self resetSearch];
+}
+
+- (IBAction)endSearch:(UIBarButtonItem *)sender
+{
+  self.searching = NO;
+  [self.searchBar resignFirstResponder];
 }
 
 #pragma mark - UITableViewDataSource
@@ -151,7 +156,6 @@
 
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar
 {
-  [searchBar setShowsCancelButton:YES animated:YES];
   self.searching = YES;
 }
 
@@ -160,21 +164,12 @@
   self.didJustClearSearch = !searchBar.isFirstResponder && (!searchText || searchText.length == 0);
   if (self.didJustClearSearch) {
     self.searching = NO;
-    [searchBar setShowsCancelButton:NO animated:YES];
     [searchBar resignFirstResponder];
   }
 }
 
-- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar
-{
-  self.searching = NO;
-  [searchBar setShowsCancelButton:NO animated:YES];
-  [searchBar resignFirstResponder];
-}
-
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
 {
-  [searchBar setShowsCancelButton:NO animated:YES];
   [searchBar resignFirstResponder];
   [self performTwitterSearchForQuery:searchBar.text withCompletion:^(NSDictionary *tweetsData) {
     self.searchResults = [TSTweet parseTweets:tweetsData[@"statuses"]];
@@ -206,6 +201,7 @@
   // We're making use of UITableViewCellEditingStyleInsert.
   [self.tableView setEditing:_searching animated:NO];
   [self.tableView reloadData];
+  [self.navigationItem setRightBarButtonItem:(_searching ? self.searchDoneButtonItem : self.editButtonItem) animated:YES];
   if (!_searching) {
     self.searchBar.text = nil;
     NSError *error;

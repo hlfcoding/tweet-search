@@ -82,9 +82,16 @@
                             <outlet property="delegate" destination="0Bh-yp-mum" id="euN-bZ-suZ"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="aFJ-DK-EWu"/>
+                    <navigationItem key="navigationItem" id="aFJ-DK-EWu">
+                        <barButtonItem key="rightBarButtonItem" title="Done" style="done" id="z1w-Wk-oB5">
+                            <connections>
+                                <action selector="endSearch:" destination="0Bh-yp-mum" id="9eS-Qx-Ff0"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="searchBar" destination="Wqq-eo-0Fq" id="SV5-N1-BJz"/>
+                        <outlet property="searchDoneButtonItem" destination="z1w-Wk-oB5" id="YYq-za-ZIH"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Gt8-qW-CAB" userLabel="First Responder" sceneMemberID="firstResponder"/>
