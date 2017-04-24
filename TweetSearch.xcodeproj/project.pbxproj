@@ -252,7 +252,7 @@
 				LastUpgradeCheck = 0820;
 				TargetAttributes = {
 					E34C18871924835000C7027A = {
-						DevelopmentTeam = KUM22WND54;
+						DevelopmentTeam = G9TR83TNAE;
 					};
 					E34C18AB1924835000C7027A = {
 						TestTargetID = E34C18871924835000C7027A;
@@ -496,7 +496,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				DEVELOPMENT_TEAM = KUM22WND54;
+				DEVELOPMENT_TEAM = G9TR83TNAE;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TweetSearch/TweetSearch-Prefix.pch";
 				INFOPLIST_FILE = "TweetSearch/TweetSearch-Info.plist";
@@ -512,7 +512,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				DEVELOPMENT_TEAM = KUM22WND54;
+				DEVELOPMENT_TEAM = G9TR83TNAE;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TweetSearch/TweetSearch-Prefix.pch";
 				INFOPLIST_FILE = "TweetSearch/TweetSearch-Info.plist";
